@@ -16,11 +16,29 @@ app.use(express.json())
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.hpvuccm.mongodb.net/?retryWrites=true&w=majority`;
 // console.log(uri)
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
-client.connect(err => {
-    const collection = client.db("test").collection("devices");
-    // perform actions on the collection object
-    client.close();
-});
+
+async function run() {
+    try {
+        const cakeCollection = client.db('candleCake').collection('cakes')
+        app.get('/cakes', async (req, res) => {
+            const query = {}
+            const cursor = cakeCollection.find(query);
+            const cakes = await cursor.limit(3).toArray();
+            res.send(cakes)
+        })
+        app.get('/cakeDetails', async (req, res) => {
+            const query = {}
+            const cursor = cakeCollection.find(query);
+            const cakeDetails = await cursor.toArray();
+            res.send(cakeDetails)
+        })
+
+    }
+    finally {
+
+    }
+}
+run().catch(err => console.error(err))
 
 
 app.get('/', (req, res) => {

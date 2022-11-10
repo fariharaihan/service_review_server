@@ -21,6 +21,7 @@ async function run() {
     try {
         const cakeCollection = client.db('candleCake').collection('cakes')
         const reviewCollection = client.db('candleCake').collection('reviews')
+        const serviceCollection = client.db('candleCake').collection('services')
 
         app.get('/cakes', async (req, res) => {
             const query = {}
@@ -89,6 +90,14 @@ async function run() {
             const result = await reviewCollection.deleteOne(query);
             res.send(result)
         })
+
+        // service api
+        app.post('/services', async (req, res) => {
+            const service = req.body;
+            const result = await serviceCollection.insertOne(service);
+            res.send(result)
+        })
+
 
     }
     finally {
